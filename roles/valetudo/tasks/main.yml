@@ -31,13 +31,13 @@
     url: "{{ item.url }}"
     dest: "{{ item.dest }}"
   loop:
-    - url: "https://github.com/Hypfer/Valetudo/releases/download/{{ valetudo_version }}/valetudo"
+    - url: "{{ valetudo_git_repo }}/releases/download/{{ valetudo_version }}/valetudo"
       dest: "{{ valetudo_path }}/"
-    - url: https://github.com/Hypfer/Valetudo/raw/master/deployment/valetudo.conf
+    - url: "{{ valetudo_git_repo }}/raw/master/deployment/valetudo.conf"
       dest: "{{ valetudo_path}}/deployment/"
-    - url: https://github.com/Hypfer/Valetudo/raw/master/deployment/etc/hosts
+    - url: "{{ valetudo_git_repo }}/raw/master/deployment/etc/hosts"
       dest: "{{ valetudo_path}}/deployment/etc/"
-    - url: https://github.com/Hypfer/Valetudo/raw/master/deployment/etc/rc.local
+    - url: "{{ valetudo_git_repo }}/raw/master/deployment/etc/rc.local"
       dest: "{{ valetudo_path}}/deployment/etc/"
     - url: "https://cdn.cnbj2.fds.api.mi-img.com/rubys/updpkg/{{ firmware_version }}.fullos.pkg"
       dest: "{{ firmware_path }}"

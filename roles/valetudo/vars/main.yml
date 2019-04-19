@@ -8,6 +8,7 @@ firmware_version: v11_001748
 ssh_key: "$HOME/.ssh/id_rsa.pub"
 valetudo_version: 0.3.0
 
+valetudo_git_repo: https://github.com/Hypfer/Valetudo
 firmware_path: "{{ rockrobo_path}}/firmware/"
 valetudo_path: "{{ rockrobo_path}}/valetudo"
 dustcloud_path: "{{ rockrobo_path}}/dustcloud"
