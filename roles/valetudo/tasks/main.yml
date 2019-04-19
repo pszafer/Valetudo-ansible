@@ -1,0 +1,69 @@
+---
+
+- name: Check if packages are installed
+  package:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - dos2unix
+    - git
+    
+- name: Create dir rockrobo
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - "{{ rockrobo_path }}"
+    - "{{ valetudo_path }}"
+    - "{{ valetudo_path }}/deployment"
+    - "{{ valetudo_path }}/deployment/etc"
+    - "{{ firmware_path }}"
+    - "{{ image_path }}"
+    - "{{ flasher_path }}"
+
+- name: Clone git repo
+  git:
+    repo: https://github.com/dgiese/dustcloud.git
+    dest: "{{ dustcloud_path }}"
+
+- name: Download packages
+  get_url:
+    url: "{{ item.url }}"
+    dest: "{{ item.dest }}"
+  loop:
+    - url: "https://github.com/Hypfer/Valetudo/releases/download/{{ valetudo_version }}/valetudo"
+      dest: "{{ valetudo_path }}/"
+    - url: https://github.com/Hypfer/Valetudo/raw/master/deployment/valetudo.conf
+      dest: "{{ valetudo_path}}/deployment/"
+    - url: https://github.com/Hypfer/Valetudo/raw/master/deployment/etc/hosts
+      dest: "{{ valetudo_path}}/deployment/etc/"
+    - url: https://github.com/Hypfer/Valetudo/raw/master/deployment/etc/rc.local
+      dest: "{{ valetudo_path}}/deployment/etc/"
+    - url: "https://cdn.cnbj2.fds.api.mi-img.com/rubys/updpkg/{{ firmware_version }}.fullos.pkg"
+      dest: "{{ firmware_path }}"
+
+- name: Build firmware
+  shell: "{{ imagebuilder }} --firmware={{firmware_path}}{{ firmware_version }}.fullos.pkg --public-key={{ ssh_key }} --valetudo-path={{ valetudo_path }} --disable-firmware-updates --ntpserver={{ ntp }} --replace-adbd"
+  args:
+    chdir: "{{ image_path }}"
+  become: yes
+
+- name: Venv exists?
+  stat:
+    path: "{{ venv_path }}"
+  register: virtualenvexists
+- name: Manually create the initial virtualenv
+  shell: "python3 -m venv {{ venv_path }}"
+  when: not virtualenvexists.stat.exists
+
+- name: Install necessary PIP packages
+  pip:
+    virtualenv: "{{ venv_path }}"
+    name: "{{ item }}"
+    state: latest
+  loop:
+    - wheel
+    - python-miio
+
+- name: run flasher
+  shell: "source {{ venv_path }}/bin/activate && python3 {{ flasher }} -a {{ vacuum_ip }} -t {{ token }} -f {{ image_path }}/output/{{firmware_version}}.fullos.pkg &> {{rockrobo_path}}/flasher_out"

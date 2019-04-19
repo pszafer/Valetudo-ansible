@@ -1,0 +1,18 @@
+---
+
+rockrobo_path: /tmp/rockrobo
+vacuum_ip: ip
+token: mytoken
+ntp: myntp
+firmware_version: v11_001748
+ssh_key: "$HOME/.ssh/id_rsa.pub"
+valetudo_version: 0.3.0
+
+firmware_path: "{{ rockrobo_path}}/firmware/"
+valetudo_path: "{{ rockrobo_path}}/valetudo"
+dustcloud_path: "{{ rockrobo_path}}/dustcloud"
+image_path: "{{ rockrobo_path}}/image"
+flasher_path: "{{ rockrobo_path}}/flasher"
+venv_path: "{{ flasher_path}}/venv"
+flasher: "{{rockrobo_path}}/dustcloud/devices/xiaomi.vacuum/firmwarebuilder/flasher.py"
+imagebuilder: "{{ dustcloud_path }}/devices/xiaomi.vacuum/firmwarebuilder/imagebuilder.sh"
