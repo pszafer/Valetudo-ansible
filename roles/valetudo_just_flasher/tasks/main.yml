@@ -1,0 +1,22 @@
+---
+
+
+- name: Venv exists?
+  stat:
+    path: "{{ venv_path }}"
+  register: virtualenvexists
+- name: Manually create the initial virtualenv
+  shell: "python3 -m venv {{ venv_path }}"
+  when: not virtualenvexists.stat.exists
+
+- name: Install necessary PIP packages
+  pip:
+    virtualenv: "{{ venv_path }}"
+    name: "{{ item }}"
+    state: latest
+  loop:
+    - wheel
+    - python-miio
+
+- name: run flasher
+  shell: "source {{ venv_path }}/bin/activate && python3 {{ flasher }} -a {{ vacuum_ip }} -t {{ token }} -f {{ image_path }}/output/{{firmware_version}}.fullos.pkg &> {{rockrobo_path}}/flasher_out"

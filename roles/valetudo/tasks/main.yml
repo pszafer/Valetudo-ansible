@@ -4,9 +4,13 @@
   package:
     name: "{{ item }}"
     state: present
+  become: true
+  become_method: sudo
+  become_user: admin
   loop:
     - dos2unix
     - git
+    - ccrypt
     
 - name: Create dir rockrobo
   file:
@@ -39,7 +43,7 @@
       dest: "{{ valetudo_path}}/deployment/etc/"
     - url: "{{ valetudo_git_repo }}/raw/master/deployment/etc/rc.local"
       dest: "{{ valetudo_path}}/deployment/etc/"
-    - url: "https://cdn.cnbj2.fds.api.mi-img.com/rubys/updpkg/{{ firmware_version }}.fullos.pkg"
+    - url: "https://dustbuilder.xvm.mit.edu/pkg/s5/v11_001886.fullos.pkg"
       dest: "{{ firmware_path }}"
 
 - name: Build firmware
@@ -47,6 +51,7 @@
   args:
     chdir: "{{ image_path }}"
   become: yes
+  become_method: sudo
 
 - name: Venv exists?
   stat:

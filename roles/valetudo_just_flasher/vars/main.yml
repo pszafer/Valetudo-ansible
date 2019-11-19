@@ -2,15 +2,11 @@
 
 rockrobo_path: /tmp/rockrobo
 vacuum_ip: 192.168.8.1
-token: ##fffff
-ntp: ##my ntp
+token: #fffffff
 firmware_version: v11_001886
 ssh_key: "$HOME/.ssh/id_rsa.pub"
 valetudo_version: 0.4.0
 
-valetudo_git_repo: https://github.com/Hypfer/Valetudo
-firmware_path: "{{ rockrobo_path}}/firmware/"
-valetudo_path: "{{ rockrobo_path}}/valetudo"
 dustcloud_path: "{{ rockrobo_path}}/dustcloud"
 image_path: "{{ rockrobo_path}}/image"
 flasher_path: "{{ rockrobo_path}}/flasher"
